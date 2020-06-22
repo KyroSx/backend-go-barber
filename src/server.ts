@@ -1,13 +1,10 @@
 import express from 'express';
+import routes from './routes';
 
 const app = express();
 app.use(express.json());
-
-app.post('/test', (request, response) => {
-  const { name } = request.body;
-  return response.json({ name });
-});
+app.use(routes);
 
 app.listen(3333, () => {
-  console.log('💫 Server started!!');
+  console.log('💫 Server started!');
 });
