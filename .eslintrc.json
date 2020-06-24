@@ -19,7 +19,7 @@
         "prettier"
     ],
     "rules": {
-      "camelcase": "off",
+      "@typescript/camelcase": "off",
       "class-methods-use-this": "off",
 	   	"import/extensions": [
 	      "error",
