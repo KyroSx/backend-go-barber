@@ -1,1 +1,5 @@
 node_modules/
+
+# static files
+tmp/*
+!tmp/.gitkeep
