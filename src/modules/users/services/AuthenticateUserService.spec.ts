@@ -34,7 +34,24 @@ describe('Authenticate User Service', () => {
     expect(response.user).toEqual(user);
   });
 
-  it('should not authenticate user if wrong data are provided', async () => {
+  it('should not authenticate user if no user already created', async () => {
+    const fakeUserRepository = new FakeUserRepository();
+    const fakerHashProvider = new FakeHashProvider();
+
+    const authenticateUserService = new AuthenticateUserService(
+      fakeUserRepository,
+      fakerHashProvider,
+    );
+
+    const response = authenticateUserService.execute({
+      email: 'invalid_email@mail.com',
+      password: 'password',
+    });
+
+    expect(response).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not authenticate user if password is wrong', async () => {
     const fakeUserRepository = new FakeUserRepository();
     const fakerHashProvider = new FakeHashProvider();
 
@@ -55,8 +72,8 @@ describe('Authenticate User Service', () => {
     });
 
     const response = authenticateUserService.execute({
-      email: 'invalid_email@mail.com',
-      password: 'password',
+      email: 'email@mail.com',
+      password: 'wrong_password',
     });
 
     expect(response).rejects.toBeInstanceOf(AppError);
