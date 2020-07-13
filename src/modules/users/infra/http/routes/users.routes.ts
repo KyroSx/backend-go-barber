@@ -5,13 +5,16 @@ import uploadConfig from '@config/upload';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import UsersRepository from '../../typeorm/repositories/UsersRepository';
 
 const usersRoutes = Router();
 const upload = multer(uploadConfig);
 
 usersRoutes.post('/', async (request, response) => {
   const { name, email, password } = request.body;
-  const createUser = new CreateUserService();
+  const usersRepository = new UsersRepository();
+
+  const createUser = new CreateUserService(usersRepository);
 
   const user = await createUser.execute({ name, email, password });
 
@@ -25,7 +28,9 @@ usersRoutes.patch(
   ensureAuthenticated,
   upload.single('avatar'),
   async (request, response) => {
-    const updateUserAvatar = new UpdateUserAvatarService();
+    const usersRepository = new UsersRepository();
+
+    const updateUserAvatar = new UpdateUserAvatarService(usersRepository);
 
     const user = await updateUserAvatar.execute({
       user_id: request.user.id,
