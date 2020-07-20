@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUsersTokenRepository from '../repositories/IUserTokenRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
   token: string;
@@ -16,6 +17,9 @@ class ResetPasswordService {
 
     @inject('UsersTokenRepository')
     private usersTokenRepository: IUsersTokenRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
@@ -31,7 +35,7 @@ class ResetPasswordService {
       throw new AppError('User does not exits');
     }
 
-    user.password = password;
+    user.password = await this.hashProvider.generateHash(password);
 
     await this.usersRepository.save(user);
   }
