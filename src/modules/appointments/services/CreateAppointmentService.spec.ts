@@ -1,15 +1,19 @@
 import AppError from '@shared/errors/AppError';
-import FakeAppointmentRepoistory from '../repositories/fake/FakeAppointmentsRepository';
+import FakeAppointmentRepository from '../repositories/fake/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
-describe('Create Appointment', () => {
-  it('shold be able to create a new appointment', async () => {
-    const fakeAppointmentRepoistory = new FakeAppointmentRepoistory();
-    const createAppointmentService = new CreateAppointmentService(
-      fakeAppointmentRepoistory,
-    );
+const makeSut = () => {
+  const fakeAppointmentRepository = new FakeAppointmentRepository();
+  const sut = new CreateAppointmentService(fakeAppointmentRepository);
 
-    const appointment = await createAppointmentService.execute({
+  return { sut, fakeAppointmentRepository };
+};
+
+describe('Create Appointment', () => {
+  it('should be able to create a new appointment', async () => {
+    const { sut } = makeSut();
+
+    const appointment = await sut.execute({
       date: new Date(),
       provider_id: 'any_provider_id',
     });
@@ -19,20 +23,17 @@ describe('Create Appointment', () => {
   });
 
   it('should not be able to create two appointments in same date', async () => {
-    const fakeAppointmentRepoistory = new FakeAppointmentRepoistory();
-    const createAppointmentService = new CreateAppointmentService(
-      fakeAppointmentRepoistory,
-    );
+    const { sut } = makeSut();
 
     const appointmentDate = new Date(2020, 4, 1, 11);
 
-    await createAppointmentService.execute({
+    await sut.execute({
       date: appointmentDate,
       provider_id: 'any_provider_id',
     });
 
-    expect(
-      createAppointmentService.execute({
+    await expect(
+      sut.execute({
         date: appointmentDate,
         provider_id: 'any_provider_id',
       }),

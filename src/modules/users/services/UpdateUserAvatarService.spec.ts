@@ -8,16 +8,16 @@ import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 const makeSut = () => {
   const fakeUsersRepository = new FakeUsersRepository();
   const fakeStorageProvider = new FakeStorageProvider();
-  const updateUserAvatarService = new UpdateUserAvatarService(
+  const sut = new UpdateUserAvatarService(
     fakeUsersRepository,
     fakeStorageProvider,
   );
-  return { fakeUsersRepository, fakeStorageProvider, updateUserAvatarService };
+  return { sut, fakeUsersRepository, fakeStorageProvider };
 };
 
 describe('Update User Avatar Service', () => {
   it('should be able to update user avatar', async () => {
-    const { fakeUsersRepository, updateUserAvatarService } = makeSut();
+    const { fakeUsersRepository, sut } = makeSut();
 
     const user = await fakeUsersRepository.create({
       name: 'name',
@@ -25,7 +25,7 @@ describe('Update User Avatar Service', () => {
       password: 'password',
     });
 
-    await updateUserAvatarService.execute({
+    await sut.execute({
       user_id: user.id,
       avatarFilename: 'avatar.jpeg',
     });
@@ -34,10 +34,10 @@ describe('Update User Avatar Service', () => {
   });
 
   it('should not be able to update avatar from non-existing user', async () => {
-    const { updateUserAvatarService } = makeSut();
+    const { sut } = makeSut();
 
-    expect(
-      updateUserAvatarService.execute({
+    await expect(
+      sut.execute({
         user_id: 'invalid_id',
         avatarFilename: 'avatar.jpeg',
       }),
@@ -45,11 +45,7 @@ describe('Update User Avatar Service', () => {
   });
 
   it('should delete old avatar when updating new one', async () => {
-    const {
-      fakeUsersRepository,
-      fakeStorageProvider,
-      updateUserAvatarService,
-    } = makeSut();
+    const { sut, fakeUsersRepository, fakeStorageProvider } = makeSut();
 
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
 
@@ -59,12 +55,12 @@ describe('Update User Avatar Service', () => {
       password: 'password',
     });
 
-    await updateUserAvatarService.execute({
+    await sut.execute({
       user_id: user.id,
       avatarFilename: 'avatar.jpeg',
     });
 
-    await updateUserAvatarService.execute({
+    await sut.execute({
       user_id: user.id,
       avatarFilename: 'updated_avatar.jpeg',
     });
