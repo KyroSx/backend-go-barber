@@ -7,6 +7,7 @@ const profileController = new ProfileController();
 
 profileRoutes.use(ensureAuthenticated);
 
+profileRoutes.get('/', profileController.index);
 profileRoutes.put('/', profileController.update);
 
 export default profileRoutes;

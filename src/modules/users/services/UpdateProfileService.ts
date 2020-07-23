@@ -26,8 +26,8 @@ class UpdateProfileService {
     user_id,
     name,
     email,
-    new_password,
     old_password,
+    new_password,
   }: IRequest): Promise<User> {
     const user = await this.usersRepository.findById(user_id);
 
@@ -63,9 +63,7 @@ class UpdateProfileService {
       user.password = await this.hashProvider.generateHash(new_password);
     }
 
-    await this.usersRepository.save(user);
-
-    return user;
+    return this.usersRepository.save(user);
   }
 }
 

@@ -11,12 +11,14 @@ class ProfileController {
 
     const user = await showProfileService.execute({ user_id });
 
+    delete user.password;
+
     return response.json(user);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { name, email, old_password, password } = request.body;
+    const { name, email, old_password, new_password } = request.body;
 
     const updateProfileService = container.resolve(UpdateProfileService);
 
@@ -25,7 +27,7 @@ class ProfileController {
       name,
       email,
       old_password,
-      new_password: password,
+      new_password,
     });
 
     delete user.password;
