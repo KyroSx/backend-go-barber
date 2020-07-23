@@ -102,6 +102,18 @@ describe('Update Profile Service', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
+  it('should not show whether user_id does not exists', async () => {
+    const { sut } = makeSut();
+
+    expect(
+      sut.execute({
+        user_id: 'non_existing_user_id',
+        name: 'Non existing Name',
+        email: 'non_existing_user_mail@mail.com',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
   it('should not be able to update the password entering incorrect old password', async () => {
     const { sut, fakeUsersRepository } = makeSut();
 
