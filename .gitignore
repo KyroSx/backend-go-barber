@@ -3,5 +3,15 @@ node_modules/
 # static files
 tmp/*
 !tmp/.gitkeep
+!tmp/uploads/.gitkeep
 
+# tests
 coverage/
+
+# DOTENV
+.env
+**/.env/**
+
+# DB
+ormconfig.json
+
