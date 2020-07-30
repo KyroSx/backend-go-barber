@@ -1,10 +1,11 @@
-import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import ListProvidersService from './ListProvidersService';
 
 const makeSut = () => {
   const fakeUsersRepository = new FakeUsersRepository();
-  const sut = new ListProvidersService(fakeUsersRepository);
+  const fakeCacheProvider = new FakeCacheProvider();
+  const sut = new ListProvidersService(fakeUsersRepository, fakeCacheProvider);
 
   return { sut, fakeUsersRepository };
 };

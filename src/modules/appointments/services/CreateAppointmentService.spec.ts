@@ -1,14 +1,17 @@
 import AppError from '@shared/errors/AppError';
 import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeAppointmentRepository from '../repositories/fake/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
 const makeSut = () => {
   const fakeAppointmentRepository = new FakeAppointmentRepository();
   const fakeNotificationsRepository = new FakeNotificationsRepository();
+  const fakeCacheProvider = new FakeCacheProvider();
   const sut = new CreateAppointmentService(
     fakeAppointmentRepository,
     fakeNotificationsRepository,
+    fakeCacheProvider,
   );
 
   return { sut, fakeAppointmentRepository };

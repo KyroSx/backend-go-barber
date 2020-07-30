@@ -1,30 +1,24 @@
 import AppError from '@shared/errors/AppError';
 import FakeUserRepository from '../repositories/fakes/FakeUsersRepository';
 import AuthenticateUserService from './AuthenticateUserService';
-import CreateUserService from './CreateUserService';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
 const makeSut = () => {
   const fakeUserRepository = new FakeUserRepository();
   const fakerHashProvider = new FakeHashProvider();
 
-  const createUserService = new CreateUserService(
-    fakeUserRepository,
-    fakerHashProvider,
-  );
-
   const sut = new AuthenticateUserService(
     fakeUserRepository,
     fakerHashProvider,
   );
 
-  return { sut, createUserService, fakeUserRepository, fakerHashProvider };
+  return { sut, fakeUserRepository, fakerHashProvider };
 };
 
 describe('Authenticate User Service', () => {
   it('should authenticate user if correct data are provided', async () => {
-    const { sut, createUserService } = makeSut();
-    const user = await createUserService.execute({
+    const { sut, fakeUserRepository } = makeSut();
+    const user = await fakeUserRepository.create({
       name: 'name',
       email: 'email@mail.com',
       password: 'password',
@@ -51,9 +45,9 @@ describe('Authenticate User Service', () => {
   });
 
   it('should not authenticate user if password is wrong', async () => {
-    const { sut, createUserService } = makeSut();
+    const { sut, fakeUserRepository } = makeSut();
 
-    await createUserService.execute({
+    await fakeUserRepository.create({
       name: 'name',
       email: 'email@mail.com',
       password: 'password',

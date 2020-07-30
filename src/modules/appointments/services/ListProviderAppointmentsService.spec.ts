@@ -1,11 +1,16 @@
 import 'reflect-metadata';
 
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeAppointmentsRepository from '../repositories/fake/FakeAppointmentsRepository';
 import ListProviderAppointmentService from './ListProviderAppointmentsService';
 
 const makeSut = () => {
   const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-  const sut = new ListProviderAppointmentService(fakeAppointmentsRepository);
+  const fakeCacheProvider = new FakeCacheProvider();
+  const sut = new ListProviderAppointmentService(
+    fakeAppointmentsRepository,
+    fakeCacheProvider,
+  );
 
   return { sut, fakeAppointmentsRepository };
 };

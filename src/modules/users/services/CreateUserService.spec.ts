@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeUserRepository from '../repositories/fakes/FakeUsersRepository';
 import CreateUserService from './CreateUserService';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
@@ -6,7 +7,12 @@ import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 const makeSut = () => {
   const fakeUserRepository = new FakeUserRepository();
   const fakeHashProvider = new FakeHashProvider();
-  const sut = new CreateUserService(fakeUserRepository, fakeHashProvider);
+  const fakeCacheProvider = new FakeCacheProvider();
+  const sut = new CreateUserService(
+    fakeUserRepository,
+    fakeHashProvider,
+    fakeCacheProvider,
+  );
 
   return { sut, fakeHashProvider, fakeUserRepository };
 };
